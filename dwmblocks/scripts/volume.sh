@@ -1,5 +1,6 @@
 #!/bin/sh
 RESET="^c#393552^"
+COLOR="^c#e0def4^"
 
 case $BUTTON in
     4) pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -20,4 +21,4 @@ else
 	icon=" "
 fi
 
-echo "$icon $vol%$RESET"
+echo "$COLOR$icon $vol%$RESET"
