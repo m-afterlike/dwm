@@ -1,11 +1,14 @@
 #!/bin/bash
 RESET="^c#393552^"
-echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 
-if [ $? -eq 0 ]; then
-    #not connected
+# Ping Google once and capture the output
+ping_output=$(ping -c 1 google.com 2>&1)
+
+# Check if the output contains "Temporary failure in name resolution" or other errors
+if echo "$ping_output" | grep -q "Temporary failure in name resolution\|Name or service not known\|100% packet loss"; then
+    # Not connected
     echo "󱘖  Not Connected$RESET"
 else
-    #connected
+    # Connected
     echo "  Connected$RESET"
 fi
