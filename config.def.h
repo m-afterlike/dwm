@@ -3,9 +3,10 @@
 /* Helper macros for spawning commands */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 #define CMD(...)   { .v = (const char*[]){ __VA_ARGS__, NULL } }
+#define TAGSROWS 1
 
 /* appearance */
-static const unsigned int borderpx       = 2;   /* border pixel of windows */
+static const unsigned int borderpx       = 1;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
 static const unsigned int gappih         = 10;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
@@ -14,63 +15,63 @@ static const unsigned int gappov         = 10;  /* vert outer gap between window
 static const int smartgaps_fact          = 1;   /* gap factor when there is only one client; 0 = no gaps, 3 = 3x outer gaps */
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
-static const int bar_height              = 40;   /* 0 means derive from font, >= 1 explicit height */
+static const int bar_height              = 0;   /* 0 means derive from font, >= 1 explicit height */
 #define ICONSIZE 15    /* icon size */
 #define ICONSPACING 10  /* space between icon and title */
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
 static const int statusmon               = -1;
-static const int horizpadbar             = 2;    /* horizontal padding for statusbar */
+static const int horizpadbar             = 0;    /* horizontal padding for statusbar */
 static const int vertpadbar              = 10;   /* vertical padding for statusbar */
-static const char buttonbar[]            = "󰣇";
+static const char buttonbar[]            = "";
 
 /* Indicators: see patch/bar_indicators.h for options */
-static int tagindicatortype              = INDICATOR_TOP_LEFT_SQUARE;
+static int tagindicatortype              = INDICATOR_TOP_BAR_SLIM;
 static int tiledindicatortype            = INDICATOR_NONE;
-static int floatindicatortype            = INDICATOR_TOP_LEFT_SQUARE;
-static const char *fonts[]               = { "SF Pro Text:size=11", "Symbols Nerd Font:size=11" };
+static int floatindicatortype            = INDICATOR_NONE;
+static const char *fonts[]               = { "SF Pro Text:size=11", "PingFang SC:size=11:style=Regular", "PingFang SC:size=11:style=SemiBold", "Symbols Nerd Font:size=12" };
 static const char dmenufont[]            = "SF Pro Text:size=11";
 
 static char c000000[]                    = "#000000"; // placeholder value
 
-static char normfgcolor[]                = "#bbbbbb";
-static char normbgcolor[]                = "#222222";
-static char normbordercolor[]            = "#444444";
-static char normfloatcolor[]             = "#db8fd9";
+static char normfgcolor[]                = "#d4be98";
+static char normbgcolor[]                = "#1b1b1b";
+static char normbordercolor[]            = "#3c3836";
+static char normfloatcolor[]             = "#3c3836";
 
-static char selfgcolor[]                 = "#eeeeee";
-static char selbgcolor[]                 = "#005577";
-static char selbordercolor[]             = "#005577";
-static char selfloatcolor[]              = "#005577";
+static char selfgcolor[]                 = "#ddc7a1";
+static char selbgcolor[]                 = "#32302f";
+static char selbordercolor[]             = "#ddc7a1";
+static char selfloatcolor[]              = "#ddc7a1";
 
-static char titlenormfgcolor[]           = "#bbbbbb";
-static char titlenormbgcolor[]           = "#222222";
-static char titlenormbordercolor[]       = "#444444";
-static char titlenormfloatcolor[]        = "#db8fd9";
+static char titlenormfgcolor[]           = "#d4be98";
+static char titlenormbgcolor[]           = "#1b1b1b";
+static char titlenormbordercolor[]       = "#3c3836";
+static char titlenormfloatcolor[]        = "#3c3836";
 
-static char titleselfgcolor[]            = "#eeeeee";
-static char titleselbgcolor[]            = "#005577";
-static char titleselbordercolor[]        = "#005577";
-static char titleselfloatcolor[]         = "#005577";
+static char titleselfgcolor[]            = "#ddc7a1";
+static char titleselbgcolor[]            = "#32302f";
+static char titleselbordercolor[]        = "#ddc7a1";
+static char titleselfloatcolor[]         = "#ddc7a1";
 
-static char tagsnormfgcolor[]            = "#bbbbbb";
-static char tagsnormbgcolor[]            = "#222222";
-static char tagsnormbordercolor[]        = "#444444";
-static char tagsnormfloatcolor[]         = "#db8fd9";
+static char tagsnormfgcolor[]            = "#d4be98";
+static char tagsnormbgcolor[]            = "#1b1b1b";
+static char tagsnormbordercolor[]        = "#3c3836";
+static char tagsnormfloatcolor[]         = "#3c3836";
 
-static char tagsselfgcolor[]             = "#eeeeee";
-static char tagsselbgcolor[]             = "#005577";
-static char tagsselbordercolor[]         = "#005577";
-static char tagsselfloatcolor[]          = "#005577";
+static char tagsselfgcolor[]             = "#ddc7a1";
+static char tagsselbgcolor[]             = "#32302f";
+static char tagsselbordercolor[]         = "#ddc7a1";
+static char tagsselfloatcolor[]          = "#ddc7a1";
 
-static char hidnormfgcolor[]             = "#005577";
-static char hidselfgcolor[]              = "#227799";
-static char hidnormbgcolor[]             = "#222222";
-static char hidselbgcolor[]              = "#222222";
+static char hidnormfgcolor[]             = "#d4be98";
+static char hidselfgcolor[]              = "#1b1b1b";
+static char hidnormbgcolor[]             = "#3c3836";
+static char hidselbgcolor[]              = "#3c3836";
 
-static char urgfgcolor[]                 = "#bbbbbb";
-static char urgbgcolor[]                 = "#222222";
-static char urgbordercolor[]             = "#ff0000";
-static char urgfloatcolor[]              = "#db8fd9";
+static char urgfgcolor[]                 = "#d4be98";
+static char urgbgcolor[]                 = "#1b1b1b";
+static char urgbordercolor[]             = "#3c3836";
+static char urgfloatcolor[]              = "#3c3836";
 
 static char *colors[][ColCount] = {
 	/*                       fg                bg                border                float */
@@ -85,45 +86,12 @@ static char *colors[][ColCount] = {
 	[SchemeUrg]          = { urgfgcolor,       urgbgcolor,       urgbordercolor,       urgfloatcolor },
 };
 
-/* Tags
- * In a traditional dwm the number of tags in use can be changed simply by changing the number
- * of strings in the tags array. This build does things a bit different which has some added
- * benefits. If you need to change the number of tags here then change the NUMTAGS macro in dwm.c.
- *
- * Examples:
- *
- *  1) static char *tagicons[][NUMTAGS*2] = {
- *         [DEFAULT_TAGS] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I" },
- *     }
- *
- *  2) static char *tagicons[][1] = {
- *         [DEFAULT_TAGS] = { "•" },
- *     }
- *
- * The first example would result in the tags on the first monitor to be 1 through 9, while the
- * tags for the second monitor would be named A through I. A third monitor would start again at
- * 1 through 9 while the tags on a fourth monitor would also be named A through I. Note the tags
- * count of NUMTAGS*2 in the array initialiser which defines how many tag text / icon exists in
- * the array. This can be changed to *3 to add separate icons for a third monitor.
- *
- * For the second example each tag would be represented as a bullet point. Both cases work the
- * same from a technical standpoint - the icon index is derived from the tag index and the monitor
- * index. If the icon index is is greater than the number of tag icons then it will wrap around
- * until it an icon matches. Similarly if there are two tag icons then it would alternate between
- * them. This works seamlessly with alternative tags and alttagsdecoration patches.
- */
 static char *tagicons[][NUMTAGS*2] =
 {
-	[DEFAULT_TAGS]        = { "1", "2", "3", "4", "5", "1", "2", "3", "4", "5" },
-	[ALTERNATIVE_TAGS]    = { "A", "B", "C", "D", "E", "F", "G", "H", "I" },
-	[ALT_TAGS_DECORATION] = { "<1>", "<2>", "<3>", "<4>", "<5>", "<6>", "<7>", "<8>", "<9>" },
+	[DEFAULT_TAGS]        = { "一", "二", "三", "四", "五", "一", "二", "三", "四", "五" },
 };
 
-/* There are two options when it comes to per-client rules:
- *  - a typical struct table or
- *  - using the RULE macro
- *
- * A traditional struct table looks like this:
+/* A traditional struct table looks like this:
  *    // class      instance  title  wintype  tags mask  isfloating  monitor
  *    { "Gimp",     NULL,     NULL,  NULL,    1 << 4,    0,          -1 },
  *    { "Firefox",  NULL,     NULL,  NULL,    1 << 7,    0,          -1 },
@@ -137,25 +105,18 @@ static char *tagicons[][NUMTAGS*2] =
  * Refer to the Rule struct definition for the list of available fields depending on
  * the patches you enable.
  */
+
 static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 *	WM_WINDOW_ROLE(STRING) = role
-	 *	_NET_WM_WINDOW_TYPE(ATOM) = wintype
-	 */
 	RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
+	RULE(.class = "io.elementary.desktop.agent-polkit", .isfloating = 1)
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
 	RULE(.class = "Spotify", .tags = 1 << 1, .monitor = 1)
-	RULE(.class = "vesktop", .monitor = 1)
+	RULE(.class = "vesktop", .tags = 1 << 0)
 };
 
-/* Bar rules allow you to configure what is shown where on the bar, as well as
- * introducing your own bar modules.
- *
- *    monitor:
+/*    monitor:
  *      -1  show on all monitors
  *       0  show on monitor 0
  *      'A' show on active monitor (i.e. focused / selected) (or just -1 for active?)
@@ -164,6 +125,7 @@ static const Rule rules[] = {
  *    widthfunc, drawfunc, clickfunc - providing bar module width, draw and click functions
  *    name - does nothing, intended for visual clue and for logging / debugging
  */
+
 static const BarRule barrules[] = {
 	/* monitor   bar    alignment         widthfunc                 drawfunc                clickfunc                hoverfunc                name */
 	{ -1,        0,     BAR_ALIGN_LEFT,   width_stbutton,           draw_stbutton,          click_stbutton,          NULL,                    "statusbutton" },
@@ -181,10 +143,10 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol		arrange function */
-	{ "󰕰",			 tile },
-	{ "",			monocle },
-	{ "",			dwindle },
-	{ "",			NULL },
+	{ "􀧉",			 tile },
+	{ "􀅊",			monocle },
+	{ "􀧍",			dwindle },
+	{ "􀾋",			NULL },
 };
 
 
@@ -221,6 +183,18 @@ floatinglayout(const Arg *arg) {
     }
 }
 
+void
+cyclelayout(const Arg *arg) {
+    int i;
+    for (i = 0; &layouts[i] != selmon->lt[selmon->sellt]; i++);
+    
+    if (layouts[i + 1].arrange != NULL) { // if next layout exists
+        setlayout(&(Arg) { .v = &layouts[i + 1] });
+    } else {
+        setlayout(&(Arg) { .v = &layouts[0] }); // wrap to the first layout
+    }
+}
+
 /* key definitions */
 #define MODKEY Mod1Mask
 #define SUPER Mod4Mask
@@ -242,21 +216,21 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "kitty", NULL };
 
-/* commands spawned when clicking statusbar, the mouse button pressed is exported as BUTTON */
 static const StatusCmd statuscmds[] = {
-	{ "notify-send Spotify$BUTTON", 1 },
-	{ "notify-send Volume$BUTTON", 2 },
-	{ "notify-send Ethernet$BUTTON", 3 },
-	{ "notify-send Date$BUTTON", 4 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON SPOTIFY", 1 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON VOLUME", 2 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON ETHERNET", 3 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON TIME", 4 },
 };
-/* test the above with: xsetroot -name "$(printf '\x01Volume |\x02 CPU |\x03 Battery')" */
-/* test the above with: xsetroot -name "$(printf '\x01Spotify |\x02 Volume |\x03 Ethernet |\x04 Date')" */
+
 static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
+static const char *sscmd[] = { "flameshot", "gui", "-c", "-p", "/home/m/Pictures/Screenshots", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key             function                argument */
 	{ MODKEY,                       XK_space,		spawn,                  {.v = dmenucmd } },
 	{ MODKEY,             			XK_1,			spawn,                  {.v = termcmd } },
+	{ SUPER|ShiftMask,              XK_s,      		spawn,          		{.v = sscmd } },
 	// { MODKEY,                       XK_b,		  togglebar,              {0} },
 	// { MODKEY,                       XK_j,          focusstack,             {.i = +1 } },
 	// { MODKEY,                       XK_k,          focusstack,             {.i = -1 } },
@@ -317,9 +291,10 @@ static const Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static const Button buttons[] = {
     /* click                event mask           button          function        argument */
-    { ClkButton,            0,                   Button1,        spawn,          {.v = dmenucmd } },
-    { ClkLtSymbol,          0,                   Button1,        setlayout,      {0} },
-    { ClkLtSymbol,          0,                   Button3,        setlayout,      {.v = &layouts[2]} },
+    { ClkButton,            0,                   Button1,        spawn,          {.v = termcmd } },
+    { ClkButton,            0,                   Button3,        spawn,          {.v = dmenucmd } },
+	{ ClkLtSymbol,          0,                   Button1,        cyclelayout,    {.i = +1} }, // Left-click cycles forward
+	{ ClkLtSymbol,          0,                   Button3,        setlayout,      {.v = &layouts[0]} }, // Right-click resets to default
     { ClkWinTitle,          0,                   Button2,        zoom,           {0} },
     { ClkStatusText,        0,                   Button1,        spawn,          {.v = statuscmd } },
     { ClkStatusText,        0,                   Button2,        spawn,          {.v = statuscmd } },

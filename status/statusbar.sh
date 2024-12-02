@@ -7,7 +7,7 @@ set_status() {
     spotify=$(spotify)
     volume=$(volume)
     ethernet=$(ping -c 1 8.8.8.8 >/dev/null 2>&1 && echo "􀙇" || echo "􀙈")
-    time=$(date +"%a %B %d %I:%M %p")
+    time=$(date +"%a %b %d  %I:%M %p")
 
     xsetroot -name "$(printf '\x01%s  \x02 %s  \x03 %s  \x04 %s' "$spotify" "$volume" "$ethernet" "$time")"
 }

@@ -125,6 +125,7 @@ static const Rule rules[] = {
  *    widthfunc, drawfunc, clickfunc - providing bar module width, draw and click functions
  *    name - does nothing, intended for visual clue and for logging / debugging
  */
+
 static const BarRule barrules[] = {
 	/* monitor   bar    alignment         widthfunc                 drawfunc                clickfunc                hoverfunc                name */
 	{ -1,        0,     BAR_ALIGN_LEFT,   width_stbutton,           draw_stbutton,          click_stbutton,          NULL,                    "statusbutton" },
@@ -185,14 +186,12 @@ floatinglayout(const Arg *arg) {
 void
 cyclelayout(const Arg *arg) {
     int i;
-    // Find the index of the current layout
     for (i = 0; &layouts[i] != selmon->lt[selmon->sellt]; i++);
     
-    // Move to the next layout, or wrap back to the first
-    if (layouts[i + 1].arrange != NULL) { // If next layout exists
+    if (layouts[i + 1].arrange != NULL) { // if next layout exists
         setlayout(&(Arg) { .v = &layouts[i + 1] });
     } else {
-        setlayout(&(Arg) { .v = &layouts[0] }); // Wrap to the first layout
+        setlayout(&(Arg) { .v = &layouts[0] }); // wrap to the first layout
     }
 }
 
@@ -217,28 +216,21 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "kitty", NULL };
 
-/* commands spawned when clicking statusbar, the mouse button pressed is exported as BUTTON */
-// static const StatusCmd statuscmds[] = {
-// 	{ "notify-send Spotify$BUTTON", 1 },
-// 	{ "notify-send Volume$BUTTON", 2 },
-// 	{ "notify-send Ethernet$BUTTON", 3 },
-// 	{ "notify-send Date$BUTTON", 4 },
-// };
-
 static const StatusCmd statuscmds[] = {
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON SPOTIFY", 1 }, // Spotify region
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON VOLUME", 2 },  // Volume region
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON ETHERNET", 3 }, // Ethernet region
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON TIME", 4 },    // Time region
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON SPOTIFY", 1 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON VOLUME", 2 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON ETHERNET", 3 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON TIME", 4 },
 };
 
-/* test the above with: xsetroot -name "$(printf '\x01Spotify |\x02 Volume |\x03 Ethernet |\x04 Time')" */
 static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
+static const char *sscmd[] = { "flameshot", "gui", "-c", "-p", "/home/m/Pictures/Screenshots", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key             function                argument */
 	{ MODKEY,                       XK_space,		spawn,                  {.v = dmenucmd } },
 	{ MODKEY,             			XK_1,			spawn,                  {.v = termcmd } },
+	{ SUPER|ShiftMask,              XK_s,      		spawn,          		{.v = sscmd } },
 	{ MODKEY,                       XK_j,			focusdir,               {.i = 0 } }, // left
 	{ MODKEY,                       XK_l,			focusdir,               {.i = 1 } }, // right
 	{ MODKEY,                       XK_i,			focusdir,               {.i = 2 } }, // up
