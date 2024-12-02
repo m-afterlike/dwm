@@ -1,0 +1,27 @@
+#!/bin/sh
+
+cachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"
+cache="$cachedir/dmenu_run_desktop"
+mapfile="$cachedir/dmenu_run_desktop_map"
+
+[ ! -e "$cachedir" ] && mkdir -p "$cachedir"
+
+dirs=""
+IFS=:
+for dir in "${XDG_DATA_DIRS:-"/usr/local/share:/usr/share"}"; do
+    dirs="${dirs}:${dir}/applications"
+done;
+
+if stest -dqr -n "$cache" $PATH; then
+    > "$mapfile"
+    find $dirs -name '*.desktop' | while read -r file; do
+        name=$(grep -m1 '^Name=' "$file" | sed 's/^Name=//')
+        identifier=$(basename "$file" .desktop)
+        if ! echo "$name" | grep -iq -e 'Avahi' -e 'Dwm' -e 'URL Launcher' -e 'URL Handler' -e 'Pinentry' -e 'compton' -e 'Qt V4L2' -e 'Granite 7 Demo' -e 'About Xfce' -e 'Feh' -e 'Zenity' -e 'Authentication Dialog' -e 'Picom'; then
+            echo "$name" >> "$cache"
+            echo "$name|$identifier" >> "$mapfile"
+        fi
+    done
+else
+    cat "$cache"
+fi

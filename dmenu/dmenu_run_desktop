@@ -1,0 +1,7 @@
+#!/bin/sh
+
+selection=$(dmenu_path_desktop | dmenu "$@")
+if [ -n "$selection" ]; then
+    desktop_id=$(grep "^$selection|" "${XDG_CACHE_HOME:-"$HOME/.cache"}/dmenu_run_desktop_map" | cut -d '|' -f 2)
+    [ -n "$desktop_id" ] && gtk-launch "$desktop_id" &
+fi
