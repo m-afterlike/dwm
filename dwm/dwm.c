@@ -1372,6 +1372,18 @@ manage(Window w, XWindowAttributes *wa)
 		c->mon = selmon;
 		c->bw = borderpx;
 		applyrules(c);
+
+        if (c->mon != selmon || !(c->tags & selmon->tagset[selmon->seltags])) {
+            unfocus(selmon->sel, 0, NULL);
+            selmon = c->mon;
+
+            if (!(c->tags & selmon->tagset[selmon->seltags])) {
+                selmon->tagset[selmon->seltags] = c->tags;
+                arrange(selmon);
+            }
+
+            focus(NULL);
+        }
 	}
 
 	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)

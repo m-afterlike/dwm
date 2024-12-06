@@ -62,7 +62,7 @@ volume() {
 case "$MODULE" in
     SPOTIFY)
         case "$BUTTON" in
-            1) playerctl play-pause;;
+            1) playerctl --player spotify play-pause;;
             2) playerctl previous;;
             3) playerctl next;;
         esac

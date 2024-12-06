@@ -6,7 +6,7 @@
 #define TAGSROWS 1
 
 /* appearance */
-static const unsigned int borderpx       = 1;   /* border pixel of windows */
+static const unsigned int borderpx       = 2;   /* border pixel of windows */
 static const unsigned int snap           = 32;  /* snap pixel */
 static const unsigned int gappih         = 10;  /* horiz inner gap between windows */
 static const unsigned int gappiv         = 10;  /* vert inner gap between windows */
@@ -225,11 +225,17 @@ static const StatusCmd statuscmds[] = {
 
 static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
 static const char *sscmd[] = { "flameshot", "gui", "-c", "-p", "/home/m/Pictures/Screenshots", NULL };
+static const char *spotifycmd[] = { "spotify-launcher", NULL };
+static const char *firefoxcmd[]  = { "firefox", NULL };
+static const char *playpausecmd[]  = { "playerctl", "--player", "spotify", "play-pause", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key             function                argument */
 	{ MODKEY,                       XK_space,		spawn,                  {.v = dmenucmd } },
 	{ MODKEY,             			XK_1,			spawn,                  {.v = termcmd } },
+	{ MODKEY,             			XK_2,			spawn,                  {.v = firefoxcmd } },
+	{ MODKEY,             			XK_3,			spawn,                  {.v = spotifycmd } },
+	{ MODKEY|ShiftMask,             XK_3,			spawn,                  {.v = playpausecmd } },
 	{ SUPER|ShiftMask,              XK_s,      		spawn,          		{.v = sscmd } },
 	{ MODKEY,                       XK_j,			focusdir,               {.i = 0 } }, // left
 	{ MODKEY,                       XK_l,			focusdir,               {.i = 1 } }, // right
