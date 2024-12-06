@@ -238,6 +238,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_l,			focusdir,               {.i = 1 } }, // right
 	{ MODKEY,                       XK_i,			focusdir,               {.i = 2 } }, // up
 	{ MODKEY,                       XK_k,			focusdir,               {.i = 3 } }, // down
+	{ MODKEY|ShiftMask,             XK_Up,          movestack,              {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Down,        movestack,              {.i = -1 } },
 	// { MODKEY,                       XK_=,          incnmaster,             {.i = +1 } },
 	// { MODKEY,                       XK_-,          incnmaster,             {.i = -1 } },
 	{ MODKEY,                       XK_minus,		setmfact,               {.f = -0.05} },

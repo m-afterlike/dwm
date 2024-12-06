@@ -206,7 +206,7 @@ cyclelayout(const Arg *arg) {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {
 	"dmenu_run_desktop",
-	// "-m", dmenumon,
+	"-m", dmenumon,
 	// "-fn", dmenufont,
 	// "-nb", normbgcolor,
 	// "-nf", normfgcolor,
@@ -257,6 +257,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Left,		focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_Right,		tagmon,                 {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_Left,		tagmon,                 {.i = +1 } },
+	{ MODKEY,			            XK_Up,          movestack,              {.i = +1 } },
+	{ MODKEY,			            XK_Down,        movestack,              {.i = -1 } },
 	TAGKEYS(                        XK_1,                                  0)
 	TAGKEYS(                        XK_2,                                  1)
 	TAGKEYS(                        XK_3,                                  2)

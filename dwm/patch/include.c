@@ -14,6 +14,7 @@
 
 /* Other patches */
 #include "focusdir.c"
+#include "movestack.c"
 #include "vanitygaps.c"
 /* Layouts */
 #include "layout_facts.c"

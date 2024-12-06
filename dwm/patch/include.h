@@ -14,6 +14,7 @@
 
 /* Other patches */
 #include "focusdir.h"
+#include "movestack.h"
 #include "vanitygaps.h"
 /* Layouts */
 #include "layout_fibonacci.h"
