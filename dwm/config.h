@@ -16,22 +16,31 @@ static const int smartgaps_fact          = 1;   /* gap factor when there is only
 static const int showbar                 = 1;   /* 0 means no bar */
 static const int topbar                  = 1;   /* 0 means bottom bar */
 static const int bar_height              = 0;   /* 0 means derive from font, >= 1 explicit height */
-#define ICONSIZE 15    /* icon size */
-#define ICONSPACING 10  /* space between icon and title */
+#define ICONSIZE 15    							/* icon size */
+#define ICONSPACING 10  						/* space between icon and title */
+
 /* Status is to be shown on: -1 (all monitors), 0 (a specific monitor by index), 'A' (active monitor) */
 static const int statusmon               = -1;
-static const int horizpadbar             = 0;    /* horizontal padding for statusbar */
-static const int vertpadbar              = 10;   /* vertical padding for statusbar */
+static const int horizpadbar             = 0;   /* horizontal padding for statusbar */
+static const int vertpadbar              = 10;  /* vertical padding for statusbar */
 static const char buttonbar[]            = "";
 
 /* Indicators: see patch/bar_indicators.h for options */
 static int tagindicatortype              = INDICATOR_TOP_BAR_SLIM;
 static int tiledindicatortype            = INDICATOR_NONE;
 static int floatindicatortype            = INDICATOR_NONE;
-static const char *fonts[]               = { "SF Pro Text:size=11", "PingFang SC:size=11:style=Regular", "PingFang SC:size=11:style=SemiBold", "Symbols Nerd Font:size=12" };
-static const char dmenufont[]            = "SF Pro Text:size=11";
 
-static char c000000[]                    = "#000000"; // placeholder value
+/* Fonts */
+static const char dmenufont[] = "SF Pro Text:size=11";
+static const char *fonts[] = {
+	"SF Pro Text:size=11", 
+	"PingFang SC:size=11:style=Regular", 
+	"PingFang SC:size=11:style=SemiBold", 
+	"Symbols Nerd Font:size=12"
+};
+
+/* Colors */
+static char c000000[]                    = "#000000";
 
 static char normfgcolor[]                = "#d4be98";
 static char normbgcolor[]                = "#1b1b1b";
@@ -88,7 +97,7 @@ static char *colors[][ColCount] = {
 
 static char *tagicons[][NUMTAGS*2] =
 {
-	[DEFAULT_TAGS]        = { "一", "二", "三", "四", "五", "一", "二", "三", "四", "五" },
+	[DEFAULT_TAGS]       = { "一", "二", "三", "四", "五", "一", "二", "三", "四", "五" },
 };
 
 /* A traditional struct table looks like this:
@@ -108,10 +117,10 @@ static char *tagicons[][NUMTAGS*2] =
 
 static const Rule rules[] = {
 	RULE(.wintype = WTYPE "DIALOG", .isfloating = 1)
-	RULE(.class = "io.elementary.desktop.agent-polkit", .isfloating = 1)
 	RULE(.wintype = WTYPE "UTILITY", .isfloating = 1)
 	RULE(.wintype = WTYPE "TOOLBAR", .isfloating = 1)
 	RULE(.wintype = WTYPE "SPLASH", .isfloating = 1)
+	RULE(.class = "io.elementary.desktop.agent-polkit", .isfloating = 1)
 	RULE(.class = "Spotify", .tags = 1 << 1, .monitor = 1)
 	RULE(.class = "vesktop", .monitor = 1)
 };
@@ -136,14 +145,14 @@ static const BarRule barrules[] = {
 };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+static const float mfact     	= 0.55; /* factor of master area size [0.05..0.95] */
+static const int nmaster     	= 1;    /* number of clients in master area */
+static const int resizehints 	= 0;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1; 	/* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol		arrange function */
-	{ "􀧉",			 tile },
+	{ "􀧉",			tile },
 	{ "􀅊",			monocle },
 	{ "􀧍",			dwindle },
 	{ "􀾋",			NULL },
@@ -188,10 +197,10 @@ cyclelayout(const Arg *arg) {
     int i;
     for (i = 0; &layouts[i] != selmon->lt[selmon->sellt]; i++);
     
-    if (layouts[i + 1].arrange != NULL) { // if next layout exists
+    if (layouts[i + 1].arrange != NULL) { 				// if next layout exists
         setlayout(&(Arg) { .v = &layouts[i + 1] });
     } else {
-        setlayout(&(Arg) { .v = &layouts[0] }); // wrap to the first layout
+        setlayout(&(Arg) { .v = &layouts[0] }); 		// wrap to the first layout
     }
 }
 
@@ -203,7 +212,14 @@ cyclelayout(const Arg *arg) {
 	{ SUPER|ShiftMask,              KEY,      tag,            {.ui = 1 << TAG} },
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const StatusCmd statuscmds[] = {
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON SPOTIFY", 1 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON VOLUME", 2 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON ETHERNET", 3 },
+    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON TIME", 4 },
+};
+
+static char dmenumon[2] = "0";
 static const char *dmenucmd[] = {
 	"dmenu_run_desktop",
 	"-m", dmenumon,
@@ -214,20 +230,13 @@ static const char *dmenucmd[] = {
 	// "-sf", selfgcolor,
 	NULL
 };
-static const char *termcmd[]  = { "kitty", NULL };
 
-static const StatusCmd statuscmds[] = {
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON SPOTIFY", 1 },
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON VOLUME", 2 },
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON ETHERNET", 3 },
-    { "/home/m/.config/dwm/status/statusbar.sh $BUTTON TIME", 4 },
-};
-
-static const char *statuscmd[] = { "/bin/sh", "-c", NULL, NULL };
-static const char *sscmd[] = { "flameshot", "gui", "-c", "-p", "/home/m/Pictures/Screenshots", NULL };
-static const char *spotifycmd[] = { "spotify-launcher", NULL };
-static const char *firefoxcmd[]  = { "firefox", NULL };
-static const char *playpausecmd[]  = { "playerctl", "--player", "spotify", "play-pause", NULL };
+static const char *termcmd[]  		= { "kitty", NULL };
+static const char *statuscmd[] 		= { "/bin/sh", "-c", NULL, NULL };
+static const char *sscmd[] 			= { "flameshot", "gui", "-c", "-p", "/home/m/Pictures/Screenshots", NULL };
+static const char *spotifycmd[] 	= { "spotify-launcher", NULL };
+static const char *firefoxcmd[]  	= { "firefox", NULL };
+static const char *playpausecmd[] 	= { "playerctl", "--player", "spotify", "play-pause", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key             function                argument */
@@ -237,12 +246,15 @@ static const Key keys[] = {
 	{ MODKEY,             			XK_3,			spawn,                  {.v = spotifycmd } },
 	{ MODKEY|ShiftMask,             XK_3,			spawn,                  {.v = playpausecmd } },
 	{ SUPER|ShiftMask,              XK_s,      		spawn,          		{.v = sscmd } },
+	{ MODKEY,                       XK_b,		  	togglebar,              {0} },
 	{ MODKEY,                       XK_j,			focusdir,               {.i = 0 } }, // left
 	{ MODKEY,                       XK_l,			focusdir,               {.i = 1 } }, // right
 	{ MODKEY,                       XK_i,			focusdir,               {.i = 2 } }, // up
 	{ MODKEY,                       XK_k,			focusdir,               {.i = 3 } }, // down
 	{ MODKEY,                       XK_minus,		setmfact,               {.f = -0.05} },
 	{ MODKEY,                       XK_equal,		setmfact,               {.f = +0.05} },
+	{ MODKEY|ShiftMask,    			XK_minus,       incrgaps,               {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_equal,       incrgaps,               {.i = +1 } },
 	{ MODKEY,                       XK_Return,		zoom,                   {0} },
 	{ MODKEY,             			XK_q,			killclient,             {0} },
 	{ MODKEY|ShiftMask,             XK_q,			quit,                   {0} },
@@ -257,8 +269,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Left,		focusmon,               {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_Right,		tagmon,                 {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_Left,		tagmon,                 {.i = +1 } },
-	{ MODKEY,			            XK_Up,          movestack,              {.i = +1 } },
-	{ MODKEY,			            XK_Down,        movestack,              {.i = -1 } },
+	{ MODKEY,			            XK_Down,        movestack,              {.i = +1 } },
+	{ MODKEY,			            XK_Up,        	movestack,              {.i = -1 } },
 	TAGKEYS(                        XK_1,                                  0)
 	TAGKEYS(                        XK_2,                                  1)
 	TAGKEYS(                        XK_3,                                  2)
@@ -272,14 +284,14 @@ static const Button buttons[] = {
     /* click                event mask           button          function        argument */
     { ClkButton,            0,                   Button1,        spawn,          {.v = termcmd } },
     { ClkButton,            0,                   Button3,        spawn,          {.v = dmenucmd } },
-	{ ClkLtSymbol,          0,                   Button1,        cyclelayout,    {.i = +1} }, // Left-click cycles forward
-	{ ClkLtSymbol,          0,                   Button3,        setlayout,      {.v = &layouts[0]} }, // Right-click resets to default
+	{ ClkLtSymbol,          0,                   Button1,        cyclelayout,    {.i = +1} }, 			// Left-click cycles forward
+	{ ClkLtSymbol,          0,                   Button3,        setlayout,      {.v = &layouts[0]} }, 	// Right-click resets to default
     { ClkWinTitle,          0,                   Button2,        zoom,           {0} },
     { ClkStatusText,        0,                   Button1,        spawn,          {.v = statuscmd } },
     { ClkStatusText,        0,                   Button2,        spawn,          {.v = statuscmd } },
     { ClkStatusText,        0,                   Button3,        spawn,          {.v = statuscmd } },
-    { ClkStatusText,        0,                   Button4,        spawn,          {.v = statuscmd } }, // Scroll up
-    { ClkStatusText,        0,                   Button5,        spawn,          {.v = statuscmd } }, // Scroll down
+    { ClkStatusText,        0,                   Button4,        spawn,          {.v = statuscmd } }, 	// Scroll up
+    { ClkStatusText,        0,                   Button5,        spawn,          {.v = statuscmd } }, 	// Scroll down
     { ClkClientWin,         MODKEY,              Button1,        movemouse,      {0} },
     { ClkClientWin,         MODKEY,              Button2,        togglefloating, {0} },
     { ClkClientWin,         MODKEY,              Button3,        resizemouse,    {0} },
