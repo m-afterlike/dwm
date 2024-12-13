@@ -618,15 +618,45 @@ insert:
 		sel = curr = prev;
 		calcoffsets();
 		break;
+	// case XK_Return:
+	// case XK_KP_Enter:
+	// 	puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
+	// 	if (!(ev->state & ControlMask)) {
+	// 		cleanup();
+	// 		exit(0);
+	// 	}
+	// 	if (sel)
+	// 		sel->out = 1;
+	// 	break;
 	case XK_Return:
 	case XK_KP_Enter:
-		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
-		if (!(ev->state & ControlMask)) {
-			cleanup();
-			exit(0);
+		if (sel && !(ev->state & ShiftMask)) {
+			// If a valid selection exists, output it
+			puts(sel->text);
+		} else {
+			// No selection, process input
+			size_t len = strlen(text) + 1024; // Extra space for the command template
+			char *cmd = malloc(len);
+
+			if (!cmd) {
+				fprintf(stderr, "Memory allocation failed\n");
+				cleanup();
+				exit(1);
+			}
+
+			if (strstr(text, "://") || (strstr(text, ".") && !isspace(text[0]))) {
+				// Treat as URL
+				snprintf(cmd, len, "firefox --new-window \"%s\" &", text);
+			} else {
+				// Treat as search query
+				snprintf(cmd, len, "firefox --new-window \"https://www.google.com/search?q=%s\" &", text);
+			}
+
+			system(cmd);
+			free(cmd); // Free the allocated memory
 		}
-		if (sel)
-			sel->out = 1;
+		cleanup();
+		exit(0);
 		break;
 	case XK_Right:
 	case XK_KP_Right:

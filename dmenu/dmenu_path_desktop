@@ -3,25 +3,81 @@
 cachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"
 cache="$cachedir/dmenu_run_desktop"
 mapfile="$cachedir/dmenu_run_desktop_map"
+filter_file="$HOME/.config/dmenu_desktop_filter"
+cache_stamp="$cachedir/dmenu_run_desktop_stamp"
 
-[ ! -e "$cachedir" ] && mkdir -p "$cachedir"
+[ ! -d "$cachedir" ] && mkdir -p "$cachedir"
 
-dirs=""
-IFS=:
-for dir in "${XDG_DATA_DIRS:-"/usr/local/share:/usr/share"}"; do
-    dirs="${dirs}:${dir}/applications"
-done;
 
-if stest -dqr -n "$cache" $PATH; then
-    > "$mapfile"
-    find $dirs -name '*.desktop' | while read -r file; do
-        name=$(grep -m1 '^Name=' "$file" | sed 's/^Name=//')
-        identifier=$(basename "$file" .desktop)
-        if ! echo "$name" | grep -iq -e 'Avahi' -e 'Dwm' -e 'URL Launcher' -e 'URL Handler' -e 'Pinentry' -e 'compton' -e 'Qt V4L2' -e 'Granite 7 Demo' -e 'About Xfce' -e 'Feh' -e 'Zenity' -e 'Authentication Dialog' -e 'Picom'; then
+regenerate_cache() {
+    echo "Regenerating application cache..." >&2
+
+    # clear cache files
+    : > "$cache"
+    : > "$mapfile"
+
+    filter_list=()
+    if [ -f "$filter_file" ]; then
+        mapfile -t filter_list < "$filter_file"
+    fi
+
+    should_filter() {
+        local name="$1"
+        for term in "${filter_list[@]}"; do
+            if echo "$name" | grep -iq "$term"; then
+                return 0  # filter
+            fi
+        done
+        return 1  # dont filter
+    }
+
+    IFS=:
+
+    for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share}; do
+        appdir="$dir/applications"
+        [ -d "$appdir" ] || continue
+        find "$appdir" -name '*.desktop' | while read -r file; do
+            name=$(grep -m1 '^Name=' "$file" | sed 's/^Name=//' | tr -d '\n')
+            [ -n "$name" ] || continue
+            if should_filter "$name"; then
+                continue
+            fi
+            identifier=$(basename "$file" .desktop)
             echo "$name" >> "$cache"
             echo "$name|$identifier" >> "$mapfile"
-        fi
+        done
     done
-else
+
+    # update cache timestamp
+    touch "$cache_stamp"
+}
+
+# --force flag
+if [ "$1" = "--force" ]; then
+    regenerate_cache
     cat "$cache"
+    exit 0
 fi
+
+is_cache_stale() {
+    [ ! -f "$cache" ] && return 0
+    [ ! -f "$mapfile" ] && return 0
+    [ ! -f "$cache_stamp" ] && return 0
+
+    find ${XDG_DATA_DIRS:-/usr/local/share:/usr/share}/applications -name '*.desktop' -newer "$cache_stamp" | grep -q .
+    if [ $? -eq 0 ]; then
+        return 0
+    fi
+
+    [ -f "$filter_file" ] && [ "$filter_file" -nt "$cache_stamp" ] && return 0
+
+    return 1
+}
+
+if is_cache_stale; then
+    regenerate_cache
+else
+    echo "Using cached application list..." >&2
+fi
+
+cat "$cache"

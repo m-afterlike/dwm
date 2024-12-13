@@ -1,7 +1,27 @@
-#!/bin/sh
+# #!/bin/sh
 
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# get application names to display
 selection=$(dmenu_path_desktop | dmenu "$@")
-if [ -n "$selection" ]; then
-    desktop_id=$(grep "^$selection|" "${XDG_CACHE_HOME:-"$HOME/.cache"}/dmenu_run_desktop_map" | cut -d '|' -f 2)
-    [ -n "$desktop_id" ] && gtk-launch "$desktop_id" &
+[ -n "$selection" ] || exit
+
+# define cache dir
+cachedir="${XDG_CACHE_HOME:-"$HOME/.cache"}"
+mapfile="$cachedir/dmenu_run_desktop_map"
+
+# ensure map exists
+if [ ! -f "$mapfile" ]; then
+    echo "Map file not found. Please run dmenu_path_desktop first." >&2
+    exit 1
+fi
+
+# find application identifier
+identifier=$(grep "^$selection|" "$mapfile" | head -n1 | cut -d '|' -f2)
+
+if [ -n "$identifier" ]; then
+    gtk-launch "$identifier" &
+else
+    echo "Application not found." >&2
+    exit 1
 fi
